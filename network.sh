@@ -37,22 +37,12 @@ cd "$localdir"
 
 function log_statistic {
     ## create the file where append the logs
-    memoryfile=$(printf "memory_%s_%s.txt" $uuid $idmacchina)
-    diskIOfile=$(printf "diskIO_%s_%s.txt" $uuid $idmacchina)
-    networkIOfile=$(printf "networkIO_%s_%s.txt" $uuid $idmacchina)
-    touch "$memoryfile"
-    touch "$diskIOfile"
-    touch "$networkIOfile"
+    logfile=$(printf "%s_%s.txt" $uuid $idmacchina)
+    touch "$logfile"
 
     ## log the statistic
-
-    tcpdump -i wlan0 >> "$networkIOfile"
-    iostat -d 1 -t >> "$diskIOfile"
-    while true; do
-	printf "\n\nTimeStamp:\t%s\n" $(date +%s) >> "$memoryfile"
-	cat /proc/meminfo >> "$memoryfile"	
-	sleep 1
-    done
+	
+    dstat -n -d -m -T >> "$logfile"
 }
 
 
